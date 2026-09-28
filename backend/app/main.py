@@ -1,3 +1,4 @@
+ Shalini-B-A
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -96,3 +97,24 @@ def direct_login(login_data: LoginRequest, db: Session = Depends(get_db)):
 @app.post("/register", response_model=Token, tags=["Authentication"])
 def direct_register(user_in: RegisterRequest, db: Session = Depends(get_db)):
     return auth_register(user_in=user_in, db=db)
+from fastapi import FastAPI
+
+app = FastAPI(
+    title="Intelligent Social Media Platform",
+    version="1.0.0"
+)
+
+
+@app.get("/")
+def root():
+    return {
+        "message": "Social Media Management API is running"
+    }
+
+
+@app.get("/health")
+def health():
+    return {
+        "status": "healthy"
+    }
+  main

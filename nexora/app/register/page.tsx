@@ -40,17 +40,32 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      await authApi.register({
+      const res = await authApi.register({
         name: name.trim(),
         email: email.trim(),
         password,
         role,
       });
 
-      setSuccess("Account created successfully! Redirecting to log in...");
+      // Import and set session so user is logged in immediately
+      if (typeof window !== "undefined") {
+        localStorage.setItem("socialpilot_token", res.access_token);
+        localStorage.setItem(
+          "socialpilot_user",
+          JSON.stringify({
+            id: res.user_id,
+            name: res.name,
+            email: res.email,
+            role: res.role,
+            avatar_url: res.avatar_url ?? undefined,
+          })
+        );
+      }
+
+      setSuccess("Account created successfully! Redirecting to dashboard...");
       setTimeout(() => {
-        router.push("/login?registered=1");
-      }, 600);
+        router.push("/dashboard");
+      }, 700);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed. Please try again.");
     } finally {
@@ -70,7 +85,7 @@ export default function RegisterPage() {
             </div>
             <div className="text-left">
               <span className="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center gap-1.5">
-                IntelliPost
+                SocialPilot
                 <span className="rounded bg-[#635BFF]/10 px-1.5 py-0.5 text-[10px] font-bold text-[#635BFF]">
                   AI
                 </span>

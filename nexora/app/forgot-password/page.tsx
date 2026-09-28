@@ -25,7 +25,7 @@ export default function ForgotPasswordPage() {
               <Layers className="h-5 w-5" />
             </div>
             <span className="text-xl font-extrabold tracking-tight text-slate-900">
-              IntelliPost
+              SocialPilot
             </span>
           </Link>
           <h2 className="mt-6 text-2xl font-bold text-slate-900">Reset your password</h2>

@@ -141,6 +141,18 @@ export default function LoginPage() {
               {loading ? "Authenticating..." : "Log In to Workspace"}
               <ArrowRight className="h-4 w-4" />
             </button>
+
+            {/* Quick Demo Login Option for Reviewers & Web Host */}
+            <button
+              type="button"
+              onClick={() => {
+                setEmail("admin@socialpilot.com");
+                setPassword("password123");
+              }}
+              className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-[#635BFF]/40 bg-[#635BFF]/5 py-2.5 text-xs font-bold text-[#635BFF] hover:bg-[#635BFF]/10 transition-colors cursor-pointer"
+            >
+              <span>Fill Demo Credentials (admin@socialpilot.com)</span>
+            </button>
           </form>
 
           <p className="mt-6 text-center text-xs text-slate-500">

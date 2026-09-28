@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm --prefix nexora run build",
+  "outputDirectory": "nexora/.next",
+  "framework": "nextjs"
+}

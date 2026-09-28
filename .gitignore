@@ -111,11 +111,9 @@ rabbitmq-data/
 activemq-data/
 
 # Environments
- Shalini-B-A
 *.db
 .env
 .envrc
- main
 .venv
 env/
 venv/

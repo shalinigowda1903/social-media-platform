@@ -80,18 +80,18 @@ export default function HomePage() {
           {/* CTAs */}
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
-              href="/login"
+              href="/register"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-xl bg-linear-to-r from-[#635BFF] to-[#7C3AED] px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-[#635BFF]/30 hover:from-[#5046E5] hover:to-[#6D28D9] transition-all hover:scale-[1.02]"
             >
-              Launch App
+              Create free account
               <ArrowRight className="h-5 w-5" />
             </Link>
 
             <Link
-              href="/features"
+              href="/login"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-7 py-3.5 text-base font-semibold text-slate-700 hover:bg-slate-50 transition-all"
             >
-              Explore Features
+              Log in
             </Link>
           </div>
 

@@ -23,7 +23,7 @@ export default function Navbar() {
         
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-[#635BFF] to-[#7C3AED] text-white shadow-md shadow-[#635BFF]/25 group-hover:scale-105 transition-transform">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-tr from-[#635BFF] to-[#7C3AED] text-white shadow-md shadow-[#635BFF]/25 group-hover:scale-105 transition-transform">
             <Layers className="h-5 w-5" />
           </div>
           <div className="flex flex-col">
@@ -67,6 +67,12 @@ export default function Navbar() {
           >
             Log in
           </Link>
+          <Link
+            href="/register"
+            className="rounded-lg bg-[#635BFF] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#5046E5]"
+          >
+            Create account
+          </Link>
         </div>
 
         {/* Mobile menu trigger */}
@@ -104,6 +110,13 @@ export default function Navbar() {
                 className="w-full text-center rounded-lg border border-slate-200 py-2.5 text-sm font-semibold text-slate-700"
               >
                 Log in
+              </Link>
+              <Link
+                href="/register"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full text-center rounded-lg bg-[#635BFF] py-2.5 text-sm font-semibold text-white"
+              >
+                Create account
               </Link>
             </div>
           </div>

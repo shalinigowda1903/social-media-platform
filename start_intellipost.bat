@@ -5,7 +5,7 @@ echo   IntelliPost - Plan. Post. Perform.
 echo   Starting Backend and Frontend Servers...
 echo ===================================================
 
-start "IntelliPost Backend (FastAPI)" cmd /k "cd backend && python -m uvicorn app.main:app --reload --port 8000"
+start "IntelliPost Backend (FastAPI)" cmd /k "cd backend && set DATABASE_URL=sqlite:///./socialpilot_dev.db && python -m uvicorn app.main:app --reload --port 8000"
 start "IntelliPost Frontend (Next.js)" cmd /k "cd nexora && npm run dev"
 
 echo.

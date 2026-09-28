@@ -95,6 +95,9 @@ cd backend
 # Install dependencies (if not already installed)
 pip install -r requirements.txt
 
+# PowerShell: use an isolated local database instead of any DATABASE_URL in .env
+$env:DATABASE_URL = "sqlite:///./socialpilot_dev.db"
+
 # Run the backend server
 python -m uvicorn app.main:app --reload --port 8000
 ```

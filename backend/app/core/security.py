@@ -13,6 +13,15 @@ def get_password_hash(password: str) -> str:
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     if not hashed_password or not plain_password:
         return False
+    if hashed_password.startswith(("$2a$", "$2b$", "$2y$")):
+        try:
+            import bcrypt
+            return bcrypt.checkpw(
+                plain_password.encode("utf-8"),
+                hashed_password.encode("utf-8"),
+            )
+        except (ImportError, ValueError):
+            return False
     # Check pbkdf2 hash
     computed_hash = get_password_hash(plain_password)
     if computed_hash == hashed_password:

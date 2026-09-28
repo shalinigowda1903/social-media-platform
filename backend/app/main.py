@@ -21,23 +21,23 @@ from app.routers.ai_assistant import router as ai_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # 1. Create DB tables
-    Base.metadata.create_all(bind=engine)
-    
-    # 2. Seed initial realistic demo data
-    db = SessionLocal()
-    try:
-        seed_database(db)
-    finally:
-        db.close()
+    scheduler_started = False
+    if engine.dialect.name == "sqlite":
+        Base.metadata.create_all(bind=engine)
 
-    # 3. Start background post scheduler
-    await SchedulerService.start()
+        db = SessionLocal()
+        try:
+            seed_database(db)
+        finally:
+            db.close()
+
+        await SchedulerService.start()
+        scheduler_started = True
 
     yield
 
-    # 4. Graceful shutdown
-    await SchedulerService.stop()
+    if scheduler_started:
+        await SchedulerService.stop()
 
 app = FastAPI(
     title=settings.PROJECT_NAME,

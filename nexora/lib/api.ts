@@ -5,8 +5,14 @@ const getApiBaseUrls = (): string[] => {
   if (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL) {
     urls.push(process.env.NEXT_PUBLIC_API_URL);
   }
-  if (typeof window !== "undefined" && window.location.origin) {
-    urls.push(`${window.location.origin}/api`);
+  if (typeof window !== "undefined" && window.location.hostname) {
+    const host = window.location.hostname;
+    // Dynamically derive backend API URL matching whatever IP / hostname the user is using (e.g. 10.209.149.53)
+    urls.push(`http://${host}:8001/api`);
+    urls.push(`http://${host}:8000/api`);
+    if (window.location.origin) {
+      urls.push(`${window.location.origin}/api`);
+    }
   }
   urls.push("http://127.0.0.1:8001/api");
   urls.push("http://127.0.0.1:8000/api");
@@ -128,7 +134,7 @@ export const authApi = {
         });
         return data;
       } catch {
-        // Local Session Fallback for Web Host
+        // Local Session Fallback for Web Host / Network IP
         const user = {
           id: 1,
           name: "Chandu",
@@ -206,7 +212,7 @@ export interface PostItem {
   pinterest_content?: string | null;
   media_url?: string | null;
   media_type?: string;
-  platforms: string; // e.g. "instagram,facebook"
+  platforms: string;
   status: "Draft" | "Scheduled" | "Published" | "Failed" | "Cancelled" | "Pending Approval";
   scheduled_at?: string | null;
   published_at?: string | null;
@@ -308,36 +314,6 @@ const INITIAL_POSTS: PostItem[] = [
     reach_count: 0,
     is_ai_generated: true,
     created_at: "2026-09-01T09:30:00Z"
-  },
-  {
-    id: 5,
-    user_id: 1,
-    content: "✨ Weekly Creator Spotlight: Learn how top digital agencies scale client accounts without burning out creative teams.",
-    platforms: "youtube,pinterest,instagram",
-    media_url: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&auto=format&fit=crop&q=80",
-    status: "Scheduled",
-    scheduled_at: "2026-09-08T17:15:00Z",
-    likes_count: 0,
-    comments_count: 0,
-    shares_count: 0,
-    clicks_count: 0,
-    reach_count: 0,
-    is_ai_generated: false,
-    created_at: "2026-09-01T10:00:00Z"
-  },
-  {
-    id: 6,
-    user_id: 1,
-    content: "Draft: Upcoming feature announcement regarding automated PDF and Excel analytics exports.",
-    platforms: "twitter,linkedin",
-    status: "Draft",
-    likes_count: 0,
-    comments_count: 0,
-    shares_count: 0,
-    clicks_count: 0,
-    reach_count: 0,
-    is_ai_generated: false,
-    created_at: "2026-09-01T11:00:00Z"
   }
 ];
 
@@ -544,25 +520,6 @@ const INITIAL_CAMPAIGNS: CampaignItem[] = [
     actual_engagement: 32000,
     posts_count: 24,
     created_at: "2026-08-25T00:00:00Z"
-  },
-  {
-    id: 2,
-    user_id: 1,
-    name: "Q3 Thought Leadership",
-    description: "Weekly executive insights and AI industry frameworks on LinkedIn and Twitter.",
-    platforms: "linkedin,twitter",
-    start_date: "2026-08-20T00:00:00Z",
-    end_date: "2026-09-20T00:00:00Z",
-    budget: 8000,
-    objective: "Drive B2B Inbound Leads",
-    status: "Active",
-    progress_percent: 62,
-    target_reach: 100000,
-    actual_reach: 84000,
-    target_engagement: 25000,
-    actual_engagement: 19400,
-    posts_count: 16,
-    created_at: "2026-08-20T00:00:00Z"
   }
 ];
 
@@ -763,16 +720,6 @@ export const analyticsApi = {
           engagement: 466,
           engagement_rate: "5.4%",
           media_url: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=200&auto=format&fit=crop&q=80"
-        },
-        {
-          id: 2,
-          content: "Excited to announce SocialPilot 2.0! Schedule across 6 platforms simultaneously with AI captions & analytics.",
-          platforms: ["instagram", "facebook", "linkedin", "twitter"],
-          published_at: "Aug 30, 2026",
-          reach: 18400,
-          engagement: 244,
-          engagement_rate: "4.9%",
-          media_url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=200&auto=format&fit=crop&q=80"
         }
       ];
     }
@@ -894,8 +841,7 @@ export interface TeamMemberItem {
 
 const INITIAL_TEAM: TeamMemberItem[] = [
   { id: 1, team_id: 1, name: "Chandu", email: "admin@socialpilot.com", role: "Admin", avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80", status: "Active", permissions: "view,create,edit,delete,publish,analytics,manage_team", created_at: "2026-08-01T00:00:00Z" },
-  { id: 2, team_id: 1, name: "Aarav Sharma", email: "aarav@socialpilot.com", role: "Content Creator", avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80", status: "Active", permissions: "view,create,edit,publish", created_at: "2026-08-10T00:00:00Z" },
-  { id: 3, team_id: 1, name: "Priya Patel", email: "priya@socialpilot.com", role: "Marketing Team", avatar_url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80", status: "Active", permissions: "view,create,edit,publish,analytics", created_at: "2026-08-15T00:00:00Z" }
+  { id: 2, team_id: 1, name: "Aarav Sharma", email: "aarav@socialpilot.com", role: "Content Creator", avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80", status: "Active", permissions: "view,create,edit,publish", created_at: "2026-08-10T00:00:00Z" }
 ];
 
 export const teamApi = {
@@ -958,8 +904,7 @@ export interface NotificationItem {
 }
 
 const INITIAL_NOTIFS: NotificationItem[] = [
-  { id: 1, user_id: 1, title: "Welcome to SocialPilot 👋", message: "Your workspace is initialized and ready. Connect your social channels to start scheduling.", category: "System", type: "info", is_read: false, action_url: "/dashboard/social-accounts", created_at: "Just now" },
-  { id: 2, user_id: 1, title: "Post Scheduled Successfully ⏰", message: "Scheduled 'Behind the scenes...' for today at peak engagement window.", category: "Publishing", type: "info", is_read: false, action_url: "/dashboard/calendar", created_at: "2 hours ago" }
+  { id: 1, user_id: 1, title: "Welcome to SocialPilot 👋", message: "Your workspace is initialized and ready. Connect your social channels to start scheduling.", category: "System", type: "info", is_read: false, action_url: "/dashboard/social-accounts", created_at: "Just now" }
 ];
 
 export const notificationsApi = {
@@ -1018,8 +963,7 @@ export interface ReportItem {
 }
 
 const INITIAL_REPORTS: ReportItem[] = [
-  { id: 1, title: "Monthly Audience Growth & Engagement Report", report_type: "Audience Growth", date_range: "Last 30 Days", platforms: "Instagram, Facebook, LinkedIn, X, YouTube", format: "PDF", created_at: "2026-09-01T00:00:00Z" },
-  { id: 2, title: "Product Launch 2.0 Campaign Summary", report_type: "Campaign Performance", date_range: "Custom Range", platforms: "Instagram, Facebook, LinkedIn", format: "Excel", created_at: "2026-08-31T00:00:00Z" }
+  { id: 1, title: "Monthly Audience Growth & Engagement Report", report_type: "Audience Growth", date_range: "Last 30 Days", platforms: "Instagram, Facebook, LinkedIn, X, YouTube", format: "PDF", created_at: "2026-09-01T00:00:00Z" }
 ];
 
 export const reportsApi = {

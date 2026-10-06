@@ -41,17 +41,18 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    description="IntelliPost API - Plan. Post. Perform. Intelligent Social Media Management SaaS Backend",
+    description="SocialPilot API - Plan. Post. Perform. Intelligent Social Media Management SaaS Backend",
     version=settings.VERSION,
     lifespan=lifespan,
     docs_url="/docs",
     redoc_url="/redoc"
 )
 
-# Configure CORS
+# Configure CORS for any web host and local environment
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_origin_regex="https?://.*",
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -84,7 +85,7 @@ def root():
 def health_check():
     return {
         "status": "OK",
-        "service": "IntelliPost Backend",
+        "service": "SocialPilot Backend",
         "database": "connected"
     }
 
@@ -96,4 +97,3 @@ def direct_login(login_data: LoginRequest, db: Session = Depends(get_db)):
 @app.post("/register", response_model=Token, tags=["Authentication"])
 def direct_register(user_in: RegisterRequest, db: Session = Depends(get_db)):
     return auth_register(user_in=user_in, db=db)
-

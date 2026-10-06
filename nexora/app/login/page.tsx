@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useState, FormEvent } from "react";
+import { useState, FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Layers, ArrowRight, Check, Lock, Mail } from "lucide-react";
-import { setAuthSession } from "@/lib/auth";
+import { Layers, ArrowRight, Sparkles, Check, Lock, Mail } from "lucide-react";
 import { authApi } from "@/lib/api";
 
 export default function LoginPage() {
@@ -15,14 +14,11 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  useEffect(() => {
-    if (new URLSearchParams(window.location.search).get("registered") === "1") {
-      const timer = window.setTimeout(() => {
-        setSuccess("Account created successfully. You can now log in.");
-      }, 0);
-      return () => window.clearTimeout(timer);
-    }
-  }, []);
+  const fillDemo = () => {
+    setEmail("admin@socialpilot.com");
+    setPassword("password123");
+    setError("");
+  };
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
@@ -37,19 +33,13 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const data = await authApi.login({ email: email.trim(), password });
-
-      setAuthSession(data.access_token, {
-        id: data.user_id,
-        name: data.name,
-        email: data.email,
-        role: data.role,
-        avatar_url: data.avatar_url ?? undefined,
-      });
-      setSuccess("Login successful! Redirecting to SocialPilot dashboard...");
-      setTimeout(() => router.push("/dashboard"), 500);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to sign in. Please try again.");
+      await authApi.login(email.trim(), password);
+      setSuccess("Login successful! Redirecting to SocialPilot workspace...");
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 500);
+    } catch (err: any) {
+      setError(err.message || "Login failed. Please check credentials.");
     } finally {
       setLoading(false);
     }
@@ -62,7 +52,7 @@ export default function LoginPage() {
         {/* Brand */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2.5">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-linear-to-tr from-[#635BFF] to-[#7C3AED] text-white shadow-lg shadow-[#635BFF]/30">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-tr from-[#635BFF] to-[#7C3AED] text-white shadow-lg shadow-[#635BFF]/30">
               <Layers className="h-6 w-6" />
             </div>
             <div className="text-left">
@@ -84,6 +74,24 @@ export default function LoginPage() {
         {/* Card */}
         <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/50">
           
+          {/* 1-Click Demo Login Banner */}
+          <div className="mb-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-cyan-50 p-3.5 border border-indigo-100/80 flex items-center justify-between">
+            <div>
+              <p className="text-xs font-bold text-indigo-950 flex items-center gap-1.5">
+                <Sparkles className="h-3.5 w-3.5 text-[#635BFF]" />
+                Demo Credentials
+              </p>
+              <p className="text-[11px] text-slate-600 mt-0.5">admin@socialpilot.com / password123</p>
+            </div>
+            <button
+              type="button"
+              onClick={fillDemo}
+              className="rounded-lg bg-white px-3 py-1.5 text-xs font-bold text-[#635BFF] shadow-xs border border-indigo-100 hover:bg-indigo-50 transition-colors cursor-pointer"
+            >
+              Fill Demo
+            </button>
+          </div>
+
           {error && (
             <div className="mb-4 rounded-xl bg-rose-50 border border-rose-200 p-3 text-xs font-medium text-rose-700">
               {error}
@@ -107,7 +115,7 @@ export default function LoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
+                  placeholder="admin@socialpilot.com"
                   className="w-full rounded-xl border border-slate-200 pl-10 pr-4 py-2.5 text-xs text-slate-900 focus:border-[#635BFF] focus:outline-none"
                 />
               </div>
@@ -136,27 +144,15 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#635BFF] to-[#7C3AED] py-3 text-sm font-semibold text-white shadow-md shadow-[#635BFF]/25 hover:from-[#5046E5] hover:to-[#6D28D9] transition-all disabled:opacity-50 cursor-pointer"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#635BFF] to-[#7C3AED] py-3 text-sm font-semibold text-white shadow-md shadow-[#635BFF]/25 hover:from-[#5046E5] hover:to-[#6D28D9] transition-all disabled:opacity-50 cursor-pointer"
             >
               {loading ? "Authenticating..." : "Log In to Workspace"}
               <ArrowRight className="h-4 w-4" />
             </button>
-
-            {/* Quick Demo Login Option for Reviewers & Web Host */}
-            <button
-              type="button"
-              onClick={() => {
-                setEmail("admin@socialpilot.com");
-                setPassword("password123");
-              }}
-              className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-[#635BFF]/40 bg-[#635BFF]/5 py-2.5 text-xs font-bold text-[#635BFF] hover:bg-[#635BFF]/10 transition-colors cursor-pointer"
-            >
-              <span>Fill Demo Credentials (admin@socialpilot.com)</span>
-            </button>
           </form>
 
           <p className="mt-6 text-center text-xs text-slate-500">
-            Don&apos;t have an account?{" "}
+            Don't have an account?{" "}
             <Link href="/register" className="font-bold text-[#635BFF] hover:underline">
               Create free account
             </Link>

@@ -120,3 +120,7 @@ npm run dev
 - **Email**: `admin@intellipost.com`
 - **Password**: `password123`
 *(Or click the "Fill Demo" button on `/login` for 1-click access!)*
+
+## 🌐 Web Deployment
+
+The Next.js frontend and FastAPI backend must both be deployed for dashboard data and changes to persist. Deploy the `backend/` service with a persistent database, then set `BACKEND_API_URL` in the frontend host's environment variables to the backend API base URL, for example `https://your-backend.example.com/api`. Redeploy the frontend after adding the variable. The frontend proxies API requests server-side, so this URL does not need the `NEXT_PUBLIC_` prefix.

@@ -2,22 +2,12 @@ import { getStoredToken, setAuthSession } from "./auth";
 
 const getApiBaseUrls = (): string[] => {
   const urls: string[] = [];
+  if (typeof window !== "undefined" && window.location.origin) {
+    urls.push(`${window.location.origin}/api/backend`);
+  }
   if (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL) {
-    urls.push(process.env.NEXT_PUBLIC_API_URL);
+    urls.push(process.env.NEXT_PUBLIC_API_URL.replace(/\/+$/, ""));
   }
-  if (typeof window !== "undefined" && window.location.hostname) {
-    const host = window.location.hostname;
-    // Dynamically derive backend API URL matching whatever IP / hostname the user is using (e.g. 10.209.149.53)
-    urls.push(`http://${host}:8001/api`);
-    urls.push(`http://${host}:8000/api`);
-    if (window.location.origin) {
-      urls.push(`${window.location.origin}/api`);
-    }
-  }
-  urls.push("http://127.0.0.1:8001/api");
-  urls.push("http://127.0.0.1:8000/api");
-  urls.push("http://localhost:8001/api");
-  urls.push("http://localhost:8000/api");
   return Array.from(new Set(urls));
 };
 
